@@ -1,4 +1,6 @@
-<?php namespace NSRosenqvist\Soma\Cache;
+<?php
+
+namespace NSRosenqvist\Soma\Cache;
 
 use Exception;
 use Soma\ServiceProvider;
@@ -19,7 +21,17 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class CacheProvider extends ServiceProvider
 {
-    protected function resolveAdapter($def, ContainerInterface $c)
+    public function boot(ContainerInterface $c) : void
+    {
+        $clear = function() use ($c) {
+            $c->get('cache')->clear();
+        };
+
+        listen('cache.transients.clear', $clear);
+        listen('cache.app.clear', $clear);
+    }
+
+    public static function resolveAdapter($def, ContainerInterface $c)
     {
         $driver = strtolower($def['driver'] ?? 'filesystem');
 
@@ -49,12 +61,13 @@ class CacheProvider extends ServiceProvider
             case "php-files": return new ProxyAdapter($pool, $namespace, $lifetime);
             case "redis": return new RedisAdapter($connection, $namespace, $lifetime);
             case "chain": return new ChainAdapter(array_map(function ($item) use ($c) {
-                    return $this->resolveAdapter($item, $c);
+                    return CacheProvider::resolveAdapter($item, $c);
                 }, $adapters), $lifetime);
         }
 
         return null;
     }
+
     public function getFactories() : array
     {
         return [
@@ -62,7 +75,7 @@ class CacheProvider extends ServiceProvider
                 $cache = new CacheManager();
 
                 foreach (config('cache.stores', []) as $name => $store) {
-                    $cache->register($name, $this->resolveAdapter($store, $c));
+                    $cache->register($name, CacheProvider::resolveAdapter($store, $c));
                 }
 
                 if ($default = config('cache.default')) {

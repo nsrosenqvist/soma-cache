@@ -1,6 +1,9 @@
-<?php namespace NSRosenqvist\Soma\Cache;
+<?php
+
+namespace NSRosenqvist\Soma\Cache;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 class CacheManager
@@ -33,7 +36,7 @@ class CacheManager
         if ($this->default) {
             return $this->use($this->default);
         } else {
-            return $this->use(array_first($this->drivers));
+            return $this->use(Arr::first($this->drivers));
         }
     }
 

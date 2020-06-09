@@ -8,6 +8,8 @@ composer require nsrosenqvist/soma-cache
 
 ## Usage
 
+First register the service provider.
+
 **Example configuration:**
 ```php
 <?php return [
@@ -22,7 +24,7 @@ composer require nsrosenqvist/soma-cache
 ];
 ```
 
-To see how to configure all supported [cache adapters](https://symfony.com/doc/4.4/components/cache.html#available-cache-adapters) review [how the configuration is processed](https://github.com/nsrosenqvist/soma-cache/blob/master/src/CacheProvider.php) in `CacheProvider::resolveAdapter`.
+To see how to configure all supported [cache adapters](https://symfony.com/doc/5.0/components/cache.html#available-cache-adapters) review [how the configuration is processed](https://github.com/nsrosenqvist/soma-cache/blob/master/src/CacheProvider.php) in `CacheProvider::resolveAdapter`.
 
 ## License
 

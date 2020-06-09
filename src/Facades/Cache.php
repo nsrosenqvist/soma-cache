@@ -1,4 +1,6 @@
-<?php namespace NSRosenqvist\Soma\Cache\Facades;
+<?php
+
+namespace NSRosenqvist\Soma\Cache\Facades;
 
 class Cache extends \Soma\Facade
 {
